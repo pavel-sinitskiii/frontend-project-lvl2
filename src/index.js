@@ -2,7 +2,7 @@ import _ from 'lodash';
 import formatter from './formatter.js';
 
 const operators = ['-', '+', ' '];
-const getCompareFiles = (filepath1, filepath2) => {
+const genDiff = (filepath1, filepath2) => {
   const file1 = formatter(filepath1);
   const file2 = formatter(filepath2);
   const keys1 = _.keys(file1);
@@ -20,4 +20,4 @@ const getCompareFiles = (filepath1, filepath2) => {
   });
   return `{\n${resultObj.join('\n')}\n}`;
 };
-export default getCompareFiles;
+export default genDiff;
