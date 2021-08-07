@@ -1,10 +1,10 @@
 import _ from 'lodash';
-import formatter from './formatter.js';
+import parse from './parsers.js';
 
 const operators = ['-', '+', ' '];
 const genDiff = (filepath1, filepath2) => {
-  const file1 = formatter(filepath1);
-  const file2 = formatter(filepath2);
+  const file1 = parse(filepath1);
+  const file2 = parse(filepath2);
   const keys1 = _.keys(file1);
   const keys2 = _.keys(file2);
   const allKeys = _.union(keys1, keys2).sort();
