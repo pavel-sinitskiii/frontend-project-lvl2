@@ -19,5 +19,10 @@ test('fileYmlComparison', () => {
 test('stylishComparison', () => {
   const file1 = getFixturePath('filenesting1.json');
   const file2 = getFixturePath('filenesting2.json');
-  expect(genDiff(file1, file2)).toEqual(result.nested);
+  expect(genDiff(file1, file2, 'stylish')).toEqual(result.nested);
+});
+test('plainComparison', () => {
+  const file1 = getFixturePath('filenesting1.json');
+  const file2 = getFixturePath('filenesting2.json');
+  expect(genDiff(file1, file2, 'plain')).toEqual(result.plaint);
 });
