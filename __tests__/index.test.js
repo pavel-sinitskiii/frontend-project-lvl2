@@ -26,3 +26,8 @@ test('plainComparison', () => {
   const file2 = getFixturePath('filenesting2.json');
   expect(genDiff(file1, file2, 'plain')).toEqual(result.plaint);
 });
+test('jsonComparison', () => {
+  const file1 = getFixturePath('filenesting1.json');
+  const file2 = getFixturePath('filenesting2.json');
+  expect(genDiff(file1, file2, 'json')).toEqual(result.json);
+});
