@@ -3,7 +3,7 @@ import _ from 'lodash';
 const getCompareFiles = (file1, file2) => {
   const allKeys = _.union(_.keys(file1), _.keys(file2));
   const keysSort = _.sortBy(allKeys);
-  const resultObj = keysSort.map((key) => {
+  const result = keysSort.map((key) => {
     const file1Value = file1[key];
     const file2Value = file2[key];
     if (_.isPlainObject(file1Value) && _.isPlainObject(file2Value)) {
@@ -39,6 +39,6 @@ const getCompareFiles = (file1, file2) => {
       value2: file2Value,
     };
   });
-  return resultObj;
+  return result;
 };
 export default getCompareFiles;

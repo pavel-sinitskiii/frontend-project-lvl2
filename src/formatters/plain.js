@@ -10,8 +10,8 @@ const getValue = (value) => {
   return value;
 };
 
-const plain = (data, path = []) => {
-  const result = data.map((el) => {
+const plain = (tree, path = []) => {
+  const result = tree.map((el) => {
     const curetPath = [...path, `${el.name}`];
     if (el.type === 'updated') {
       return `Property '${curetPath.join('.')}' was updated. From ${getValue(el.value1)} to ${getValue(el.value2)}`;

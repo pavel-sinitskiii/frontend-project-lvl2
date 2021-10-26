@@ -9,8 +9,8 @@ const isObj = (value, deep = 0) => {
   return ['{', ...result, `${' '.repeat(deep)}}`].join('\n');
 };
 
-const stylish = (data, deep = 0) => {
-  const result = data.map((el) => {
+const stylish = (tree, deep = 0) => {
+  const result = tree.map((el) => {
     if (el.type === 'unchanged') {
       return `${' '.repeat(deep + 4)}${el.name}: ${el.value}`;
     }
