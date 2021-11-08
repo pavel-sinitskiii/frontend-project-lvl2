@@ -1,24 +1,23 @@
 import _ from 'lodash';
 
 const buildTree = (data1, data2) => {
-  const allKeys = _.sortBy(_.union(_.keys(data1), _.keys(data2)));
-  const result = allKeys.map((key) => {
-    const data1Value = data1[key];
-    const data2Value = data2[key];
-    if (_.isPlainObject(data1Value) && _.isPlainObject(data2Value)) {
-      return { name: key, type: 'nested', value: buildTree(data1Value, data2Value) };
+  const keys = _.sortBy(_.union(_.keys(data1), _.keys(data2)));
+  return keys.map((key) => {
+    if (_.isPlainObject(data1[key]) && _.isPlainObject(data2[key])) {
+      return { name: key, type: 'nested', value: buildTree(data1[key], data2[key]) };
     }
     if (!_.has(data2, key)) {
-      return { name: key, type: 'removed', value: data1Value };
+      return { name: key, type: 'removed', value: data1[key] };
     } if (!_.has(data1, key)) {
-      return { name: key, type: 'added', value: data2Value };
-    } if (_.isEqual(data1Value, data2Value)) {
-      return { name: key, type: 'unchanged', value: data1Value };
+      return { name: key, type: 'added', value: data2[key] };
+    } if (!_.isEqual(data1[key], data2[key])) {
+      return {
+        name: key, type: 'updated', value1: data1[key], value2: data2[key],
+      };
     }
     return {
-      name: key, type: 'updated', value1: data1Value, value2: data2Value,
+      name: key, type: 'unchanged', value: data1[key],
     };
   });
-  return result;
 };
 export default buildTree;
