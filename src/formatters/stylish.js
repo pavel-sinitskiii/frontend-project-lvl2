@@ -11,19 +11,20 @@ const isObj = (value, deep = 0) => {
 
 const stylish = (tree, deep = 0) => {
   const result = tree.map((el) => {
-    if (el.type === 'unchanged') {
-      return `${' '.repeat(deep + 4)}${el.name}: ${el.value}`;
+    switch (el.type) {
+      case 'nested':
+        return `${' '.repeat(deep + 4)}${el.name}: ${stylish(el.value, deep + 4)}`;
+      case 'removed':
+        return `${' '.repeat(deep + 2)}- ${el.name}: ${isObj(el.value, deep + 4)}`;
+      case 'added':
+        return `${' '.repeat(deep + 2)}+ ${el.name}: ${isObj(el.value, deep + 4)}`;
+      case 'updated':
+        return `${' '.repeat(deep + 2)}- ${el.name}: ${isObj(el.value1, deep + 4)}\n${' '.repeat(deep + 2)}+ ${el.name}: ${isObj(el.value2, deep + 4)}`;
+      case 'unchanged':
+        return `${' '.repeat(deep + 4)}${el.name}: ${el.value}`;
+      default:
+        throw new Error(`Unknown status: '${el.type}'!`);
     }
-    if (el.type === 'removed') {
-      return `${' '.repeat(deep + 2)}- ${el.name}: ${isObj(el.value, deep + 4)}`;
-    }
-    if (el.type === 'added') {
-      return `${' '.repeat(deep + 2)}+ ${el.name}: ${isObj(el.value, deep + 4)}`;
-    }
-    if (el.type === 'updated') {
-      return `${' '.repeat(deep + 2)}- ${el.name}: ${isObj(el.value1, deep + 4)}\n${' '.repeat(deep + 2)}+ ${el.name}: ${isObj(el.value2, deep + 4)}`;
-    }
-    return `${' '.repeat(deep + 4)}${el.name}: ${stylish(el.value, deep + 4)}`;
   });
   return ['{', ...result, `${' '.repeat(deep)}}`].join('\n');
 };

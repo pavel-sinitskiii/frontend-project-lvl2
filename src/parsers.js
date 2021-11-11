@@ -1,14 +1,14 @@
-import { readFileSync } from 'fs';
-import path from 'path';
 import yaml from 'js-yaml';
 
-const parse = (filepath) => {
-  const getPath = path.resolve(filepath);
-  const readFile = readFileSync(getPath, 'utf-8');
-  const formateFile = path.extname(filepath);
-  if (formateFile === '.yml' || formateFile === '.yaml') {
-    return yaml.load(readFile);
+const parse = (data, type) => {
+  switch (type) {
+    case '.yml':
+    case '.yaml':
+      return yaml.load(data);
+    case '.json':
+      return JSON.parse(data);
+    default:
+      throw new Error(`Wrong format: ${type}! The format should be JSON or YAML`);
   }
-  return JSON.parse(readFile);
 };
 export default parse;

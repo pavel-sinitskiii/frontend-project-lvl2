@@ -13,19 +13,20 @@ const getValue = (value) => {
 const plain = (tree, path = []) => {
   const result = tree.map((el) => {
     const curetPath = [...path, `${el.name}`];
-    if (el.type === 'updated') {
-      return `Property '${curetPath.join('.')}' was updated. From ${getValue(el.value1)} to ${getValue(el.value2)}`;
+    switch (el.type) {
+      case 'nested':
+        return plain(el.value, curetPath);
+      case 'removed':
+        return `Property '${curetPath.join('.')}' was removed`;
+      case 'added':
+        return `Property '${curetPath.join('.')}' was added with value: ${getValue(el.value)}`;
+      case 'updated':
+        return `Property '${curetPath.join('.')}' was updated. From ${getValue(el.value1)} to ${getValue(el.value2)}`;
+      case 'unchanged':
+        return [];
+      default:
+        throw new Error(`Unknown status: '${el.type}'!`);
     }
-    if (el.type === 'added') {
-      return `Property '${curetPath.join('.')}' was added with value: ${getValue(el.value)}`;
-    }
-    if (el.type === 'nested') {
-      return plain(el.value, curetPath);
-    }
-    if (el.type === 'removed') {
-      return `Property '${curetPath.join('.')}' was removed`;
-    }
-    return [];
   });
   return _.flattenDeep(result).join('\n');
 };
