@@ -1,14 +1,14 @@
 import yaml from 'js-yaml';
 
-const parse = (data, type) => {
-  switch (type) {
-    case '.yml':
-    case '.yaml':
+const parse = (data, formatName) => {
+  switch (formatName) {
+    case 'yml':
+    case 'yaml':
       return yaml.load(data);
-    case '.json':
+    case 'json':
       return JSON.parse(data);
     default:
-      throw new Error(`Wrong format: ${type}! The format should be JSON or YAML`);
+      throw new Error(`Wrong format: ${formatName}! The format should be JSON or YAML`);
   }
 };
 export default parse;
