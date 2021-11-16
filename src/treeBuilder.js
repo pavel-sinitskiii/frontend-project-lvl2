@@ -3,20 +3,22 @@ import _ from 'lodash';
 const buildTree = (data1, data2) => {
   const keys = _.sortBy(_.union(_.keys(data1), _.keys(data2)));
   return keys.map((key) => {
-    if (_.isPlainObject(data1[key]) && _.isPlainObject(data2[key])) {
-      return { name: key, type: 'nested', value: buildTree(data1[key], data2[key]) };
+    const value1 = data1[key];
+    const value2 = data2[key];
+    if (_.isPlainObject(value1) && _.isPlainObject(value2)) {
+      return { type: 'nested', key, children: buildTree(value1, value2) };
     }
     if (!_.has(data2, key)) {
-      return { name: key, type: 'removed', value: data1[key] };
+      return { type: 'removed', key, value: value1 };
     } if (!_.has(data1, key)) {
-      return { name: key, type: 'added', value: data2[key] };
-    } if (!_.isEqual(data1[key], data2[key])) {
+      return { type: 'added', key, value: value2 };
+    } if (!_.isEqual(value1, value2)) {
       return {
-        name: key, type: 'updated', value1: data1[key], value2: data2[key],
+        type: 'updated', key, value1, value2,
       };
     }
     return {
-      name: key, type: 'unchanged', value: data1[key],
+      type: 'unchanged', key, value: value1,
     };
   });
 };

@@ -1,31 +1,31 @@
 import _ from 'lodash';
 
-const isObj = (value, deep = 0) => {
-  if (!_.isObject(value)) {
-    return value;
+const stringify = (data, depth = 0) => {
+  if (!_.isObject(data)) {
+    return String(data);
   }
-  const keys = _.keys(value);
-  const result = keys.map((key) => `${' '.repeat(deep + 4)}${key}: ${isObj(value[key], deep + 4)}`);
-  return ['{', ...result, `${' '.repeat(deep)}}`].join('\n');
+  const keys = _.keys(data);
+  const line = keys.map((key) => `${' '.repeat(depth + 4)}${key}: ${stringify(data[key], depth + 4)}`);
+  return ['{', ...line, `${' '.repeat(depth)}}`].join('\n');
 };
 
-const stylish = (tree, deep = 0) => {
-  const result = tree.map((el) => {
-    switch (el.type) {
+const stylish = (tree, depth = 0) => {
+  const line = tree.map((node) => {
+    switch (node.type) {
       case 'nested':
-        return `${' '.repeat(deep + 4)}${el.name}: ${stylish(el.value, deep + 4)}`;
+        return `${' '.repeat(depth + 4)}${node.key}: ${stylish(node.children, depth + 4)}`;
       case 'removed':
-        return `${' '.repeat(deep + 2)}- ${el.name}: ${isObj(el.value, deep + 4)}`;
+        return `${' '.repeat(depth + 2)}- ${node.key}: ${stringify(node.value, depth + 4)}`;
       case 'added':
-        return `${' '.repeat(deep + 2)}+ ${el.name}: ${isObj(el.value, deep + 4)}`;
+        return `${' '.repeat(depth + 2)}+ ${node.key}: ${stringify(node.value, depth + 4)}`;
       case 'updated':
-        return `${' '.repeat(deep + 2)}- ${el.name}: ${isObj(el.value1, deep + 4)}\n${' '.repeat(deep + 2)}+ ${el.name}: ${isObj(el.value2, deep + 4)}`;
+        return `${' '.repeat(depth + 2)}- ${node.key}: ${stringify(node.value1, depth + 4)}\n${' '.repeat(depth + 2)}+ ${node.key}: ${stringify(node.value2, depth + 4)}`;
       case 'unchanged':
-        return `${' '.repeat(deep + 4)}${el.name}: ${el.value}`;
+        return `${' '.repeat(depth + 4)}${node.key}: ${node.value}`;
       default:
-        throw new Error(`Unknown status: '${el.type}'!`);
+        throw new Error(`Unknown status: '${node.type}'!`);
     }
   });
-  return ['{', ...result, `${' '.repeat(deep)}}`].join('\n');
+  return ['{', ...line, `${' '.repeat(depth)}}`].join('\n');
 };
 export default stylish;
